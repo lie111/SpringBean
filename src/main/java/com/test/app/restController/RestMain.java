@@ -1,4 +1,4 @@
-package restController;
+package com.test.app.restController;
 
 import java.util.HashMap;
 import java.util.List;
