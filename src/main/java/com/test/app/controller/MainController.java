@@ -3,9 +3,7 @@ package com.test.app.controller;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.catalina.connector.Request;
 import org.apache.commons.io.FileUtils;
-import org.apache.tomcat.util.http.fileupload.servlet.ServletRequestContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -25,6 +23,7 @@ import com.test.app.services.UserService;
 import com.test.app.services.impl.UserServiceImpl;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.validation.Valid;
 
@@ -132,8 +131,8 @@ public class MainController implements ServletContextAware{
 	}
 	}
 	 
+//	user.setImg(user.getUserName()+ ".jpg");
 	user.setImg(user.getUserName()+ ".jpg");
-//	user.setImg("/WEB-INF/pages/" + user.getUserName()+ ".jpg");
 	new UserServiceImpl().insertUser(user);
 	return "redirect:/";
 	}
@@ -154,11 +153,9 @@ public class MainController implements ServletContextAware{
 		
 		try {			
 			
-//		File file = new File(servletContext.getRealPath("/") + "/WEB-INF/"
-//		+ filename);	
-			
-		File file = new File("C:/Users/PC1/workspace/SpringBean/webapp/resources/"+filename);
-		 
+		File file = new File(servletContext.getRealPath("/") + "/WEB-INF/pages/images/"
+		+ filename);	
+			 
 		FileUtils.writeByteArrayToFile(file, image.getBytes());
 		System.out.println("Go to the location:  " + file.toString()
 		+ " on your computer and verify that the image has been stored.");

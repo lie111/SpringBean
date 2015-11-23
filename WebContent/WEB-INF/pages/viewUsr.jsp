@@ -15,7 +15,7 @@
 	password: ***** <br/>
 	Birthdate: ${user.DOB}<br/>
 	Register Date: ${user.regDate}<br/>
-	<img src="/images/Jellyfish.jpg" alt="No imgae"/>
+	<img src="${pageContext.request.contextPath}/resources/${user.img}" alt="No imgae"/>
 	
 </body>
 </html>
