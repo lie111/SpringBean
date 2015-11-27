@@ -1,9 +1,5 @@
 package com.test.app.controller;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -15,29 +11,32 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.test.app.entities.User;
 import com.test.app.services.UserService;
+import com.test.app.services.impl.Images;
 import com.test.app.services.impl.UserServiceImpl;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.validation.Valid;
 
 @Controller
 //@RequestMapping(value={"/pages"}) //match url with /pages
-public class MainController implements ServletContextAware{
+public class MainController implements ServletContextAware {
 	
-	private UserServiceImpl userService;
+	
+	
+	private UserServiceImpl userService;	
 	private ServletContext servletContext;
 	//it will look for @bean for the interface return after configuration scan libraries
 	
 	@Autowired //@Autowired is always specify
 //	@Qualifier("ssi") //specify Qulifier for multiple return StudentService, if inject via constructor and setter
 	UserService stuservice;
+	
+	public void setServletContext(ServletContext servletContext) {
+		this.servletContext = servletContext;		 
+	}
 	
 	@RequestMapping(value={"/","/list"})
 	public ModelAndView listuser(){
@@ -110,57 +109,25 @@ public class MainController implements ServletContextAware{
 	BindingResult bindingResult,
 	@RequestParam(value = "img", required = false) MultipartFile image) {
 	 
+	String oldName = image.getOriginalFilename();
+	String extension;
+	String titleWithExtension;
+	boolean saveImage = false;
+	
+	extension = oldName.substring(oldName.lastIndexOf("."));
+	System.out.println(extension);
+	
+	titleWithExtension = user.getUserName() + extension;	
+	user.setImg(titleWithExtension);	
+	saveImage = new Images().addImage(titleWithExtension, bindingResult, image, "WEB-INF/pages/images/",
+			servletContext);
 		
-	if (!image.isEmpty()) {
-		
-	try {
-		validateImage(image);
-	 
-	} catch (RuntimeException re) {
-		bindingResult.reject(re.getMessage());
-		return "redirect:/add";
+	if (!saveImage) {
+	
+		return "redirect:/add";			
 	}
 	
-	
-	 
-	try {
-		saveImage(user.getUserName() + ".jpg", image);
-	} catch (IOException e) {
-		bindingResult.reject(e.getMessage());
-		return "redirect:/add";
-	}
-	}
-	 
-//	user.setImg(user.getUserName()+ ".jpg");
-	user.setImg(user.getUserName()+ ".jpg");
 	new UserServiceImpl().insertUser(user);
 	return "redirect:/";
-	}
-	 
-	private void validateImage(MultipartFile image) {
-	if (!image.getContentType().equals("image/jpeg")) {
-		throw new RuntimeException("Only JPG images are accepted");
-	}
-	}
-	 
-	public void setServletContext(ServletContext servletContext) {
-	this.servletContext = servletContext;
-	 
-	}
-	 
-	private void saveImage(String filename, MultipartFile image)
-	throws RuntimeException, IOException {
-		
-		try {			
-			
-		File file = new File(servletContext.getRealPath("/") + "/WEB-INF/pages/images/"
-		+ filename);	
-			 
-		FileUtils.writeByteArrayToFile(file, image.getBytes());
-		System.out.println("Go to the location:  " + file.toString()
-		+ " on your computer and verify that the image has been stored.");
-		} catch (IOException e) {
-		throw e;
-		}
 	}
 }

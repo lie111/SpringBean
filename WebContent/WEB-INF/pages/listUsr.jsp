@@ -38,7 +38,7 @@
 	   <td><c:out value="*****"/></td>
 	   <td><c:out value="${row.DOB}"/></td>
 	   <td><c:out value="${row.regDate}"/></td>
-	   <td><c:out value="${row.img}"/></td>   
+	   <td><img style="width:50px; height:50px;" src="${pageContext.request.contextPath}/userImages/${row.img}" alt="No imgae"/></td>   
 	   
 	   <td><a href='${pageContext.request.contextPath}/view-${row.id}'>View</a>
 	   <a href='${pageContext.request.contextPath}/update-${row.id}'>Update</a>

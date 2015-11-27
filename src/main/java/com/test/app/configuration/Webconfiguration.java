@@ -50,7 +50,7 @@ public class Webconfiguration extends WebMvcConfigurerAdapter{
 	
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-	    registry.addResourceHandler("/resources/**").addResourceLocations("/WEB-INF/pages/images/");
+	    registry.addResourceHandler("/userImages/**").addResourceLocations("/WEB-INF/pages/images/");
 	}
 	
 	@Bean
