@@ -16,6 +16,7 @@ import com.test.app.entities.User;
 import com.test.app.services.UserService;
 import com.test.app.services.impl.Images;
 import com.test.app.services.impl.UserServiceImpl;
+import com.test.app.services.impl.WorkWithFile;
 
 import javax.servlet.ServletContext;
 import javax.validation.Valid;
@@ -108,18 +109,13 @@ public class MainController implements ServletContextAware {
 	public String addPersonFromForm(@Valid User user,
 	BindingResult bindingResult,
 	@RequestParam(value = "img", required = false) MultipartFile image) {
-	 
-	String oldName = image.getOriginalFilename();
-	String extension;
+		
 	String titleWithExtension;
 	boolean saveImage = false;
 	
-	extension = oldName.substring(oldName.lastIndexOf("."));
-	System.out.println(extension);
-	
-	titleWithExtension = user.getUserName() + extension;	
+	titleWithExtension = user.getUserName() + "." + new WorkWithFile().getExtension(image.getOriginalFilename());	
 	user.setImg(titleWithExtension);	
-	saveImage = new Images().addImage(titleWithExtension, bindingResult, image, "WEB-INF/pages/images/",
+	saveImage = new Images().addImage("",titleWithExtension, bindingResult, image, "WEB-INF/pages/images/",
 			servletContext);
 		
 	if (!saveImage) {

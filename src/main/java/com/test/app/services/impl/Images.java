@@ -16,13 +16,13 @@ public class Images{
 		
 	ServletContext servletContext;
 	
-	public boolean addImage(String titleWithExtension,
+	public boolean addImage(String oldFileName,String titleWithExtension,
 			BindingResult bindingResult, MultipartFile image, String savePath, ServletContext sc) {
 		
 		servletContext = sc;
 			 				
 		String oldName = image.getOriginalFilename();
-		String extension;
+//		String extension;
 		
 		if (!image.isEmpty()) {
 				
@@ -33,10 +33,10 @@ public class Images{
 				bindingResult.reject(re.getMessage());
 				return false;
 			}
-						extension = oldName.substring(oldName.lastIndexOf(".") + 1);
-						System.out.println(extension);
+//						extension = oldName.substring(oldName.lastIndexOf(".") + 1);
+//						System.out.println(extension);
 			try {
-				saveImage(titleWithExtension, image, savePath);
+				saveImage(oldFileName, titleWithExtension, image, savePath);
 			} catch (IOException e) {
 				bindingResult.reject(e.getMessage());
 				return false;
@@ -53,13 +53,18 @@ public class Images{
 		}
 	}
 					 
-	private void saveImage(String filename, MultipartFile image, String savePath)
+	private void saveImage(String oldFileName, String filename, MultipartFile image, String savePath)
 		throws RuntimeException, IOException {
 				
 		String fullPath = servletContext.getRealPath("/") + savePath;
 			try {			
 				
+				File OldFile = new File(fullPath + oldFileName);
 				File checkFile = new File(fullPath);
+				
+				if(OldFile.exists()){
+					OldFile.delete();
+				}
 				
 				if(!checkFile.exists())
 					checkFile.mkdirs();
@@ -77,9 +82,10 @@ public class Images{
 	
 	public static void main(String[] args) {
 		
-		File file = new File("D:/users/user/");		
-		try{
-			
+		File file = new File("");
+		
+		
+		try{			
 				file.mkdirs();
 			
 			file.createTempFile("Heng", ".exe",file);

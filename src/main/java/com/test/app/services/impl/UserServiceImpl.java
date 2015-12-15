@@ -77,8 +77,7 @@ public class UserServiceImpl implements UserService {
 				+ "birthdate=?, image=? where id=?";
 		try(Connection cnn = new Webconfiguration().getdatasource().getConnection();
 				PreparedStatement stm = cnn.prepareStatement(sql);){
-			
-			System.out.println("update"+stu.getUserName());
+						
 			stm.setString(1, stu.getUserName());
 			stm.setString(2, stu.getEmail());
 			stm.setString(3, stu.getPasswd());
